@@ -1,15 +1,27 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getCurrentUser, getProfileImage, setProfileImage, setUserData, auth } from '../data/firebase';
+import { getCurrentUser, getProfileImage, updateUserData, updateProfileImage, activate2FA, getUserRoles } from '../data/firebase';
 
 import router from '../router';
+import { auth } from '../data/firebase';
+// import { changeUserEmail } from '../data/firebase';
 
 const user = ref();
 const urlProfile = ref();
+const userRoles = ref<string[]>([]);
+const creationDate = ref();
 
 onMounted(async () => {
-  user.value = await getCurrentUser();
-  urlProfile.value = await getProfileImage();
+    user.value = await getCurrentUser();
+    urlProfile.value = await getProfileImage();
+    if(auth.currentUser !== null){
+        userRoles.value = await getUserRoles(auth.currentUser.uid);
+    }
+    if(auth.currentUser !== null){
+    if(auth.currentUser.metadata.creationTime !== undefined){
+        creationDate.value = new Date(auth.currentUser.metadata.creationTime).toLocaleDateString('FR')
+    }
+}
 });
 
 let fileImage: File | null;
@@ -24,26 +36,40 @@ const handleFileUpload = (event: Event) => {
 };
 
 const handleClickUpdateImage = () => {
-    if(fileImage !== null) {
-        setProfileImage(fileImage)
+    if (fileImage !== null) {
+        updateProfileImage(fileImage)
     }
 }
+
+// const handleClickUpdateEmail = () => {
+//     if(newEmail !== null){
+//         changeUserEmail(newEmail);
+//     }
+// }
 
 let username: string = '';
 let email: string = '';
+// let newEmail: string = '';
 
-const handleClickProfile = () => {
-    if (auth !== null && auth.currentUser !== null) {
-        setUserData(null, null, username, email, auth.currentUser)
-        .then(() => {})
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert("Impossible : \n" + "Error Code : " + errorCode + '\nError Message : ' + errorMessage)
-        })
+const handleClickProfile = async () => {
+    if (auth && auth.currentUser) {
+        let newUsername: string | null = username || null;
+        let newEmail: string | null = email || null;
+
+        try {
+            await updateUserData(newUsername, newEmail, auth.currentUser, null);
+            // Mettre à jour l'état local après la modification
+            user.value = { ...user.value, username: newUsername, email: newEmail };
+            username = '';
+        } catch (_error) {
+            // alert(`Impossible : \nError Code : ${error.code}\nError Message : ${error.message}`);
+        }
     }
 }
 
+const handleActivate2FA = async () => {
+    activate2FA();
+}
 </script>
 
 <template>
@@ -58,14 +84,20 @@ const handleClickProfile = () => {
             <div class="card">
                 <p class="title">Profile</p>
                 <span></span>
-                <img :src="urlProfile" class="profilImage"/>
+                <img :src="urlProfile" class="profilImage" />
                 <p class="pseudo">{{ user.username }}</p>
-                <p class="rank">Owner</p>
+                <p class="rank">{{userRoles[0]}}</p>
                 <div class="infos">
                     <p class="infosName">Informations</p>
                     <div>
-                        <p>Registered: </p>
-                        <p>Two-Factor Authentication (2FA): <span>No</span></p>
+                        <p>Registered: {{creationDate}} </p>
+                        <p>Role:</p>
+                        <ul style="display: flex; justify-content: space-evenly;">
+                            <li v-for="role in userRoles" :key="role">{{ role }}</li>
+                        </ul>
+                        <p>Two-Factor Authentication (2FA): <span>{{ user.mfa ? "Yes" : "No" }}</span></p>
+                        <button id="activate2FA" @click="handleActivate2FA" v-if="!user.mfa">Activer le 2FA</button>
+                        <div style="display: none;" id="captcha"></div>
                     </div>
                 </div>
             </div>

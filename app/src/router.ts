@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { getUserState } from './data/firebase.js';
+import { getUserState, getUserRoles } from './data/firebase.ts';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -67,26 +67,36 @@ const router = createRouter({
                 }
             ],
             meta: {
-                requiresAuth: true
+                requiresAuth: true,
+                requiredRole: 'Administrateur'
             }
         },
         {
             path: "/profile",
             component: () => import("./views/ProfilePage.vue"),
             meta: {
-                requiresAuth: true
+                requiresAuth: true,
+                requiredRole: 'Modérateur'
             }
         },
     ]
 });
 
 router.beforeEach(async (to, _from, next) => {
-    const isAuth = await getUserState();
+    const user = await getUserState();
 
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-    if(requiresAuth && !isAuth) next('');
-    else next();
+    if (to.meta.requiresAuth && !user) {
+        next('/login'); // Rediriger vers la page de connexion si non connecté
+    } else if (to.meta.requiredRole && user) {
+        const roles = await getUserRoles(user.uid); // Récupère un tableau de rôles
+        if (!roles.includes(to.meta.requiredRole)) {
+            next('/unauthorized'); // Rediriger si l'utilisateur n'a pas le bon rôle
+        } else {
+            next(); // Continuer avec la navigation
+        }
+    } else {
+        next(); // Continuer avec la navigation
+    }
 });
 
 export default router

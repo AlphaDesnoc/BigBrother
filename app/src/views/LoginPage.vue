@@ -36,7 +36,7 @@
           <div class="inputBx">
             <input type="submit" value="Log In"> 
           </div>
-
+          <div style="display: none;" id="recaptcha-container-id"></div>
           <p class="createAccount">Pas de compte ? <span class="createAccount" @click="router.push('/register')">Créer un compte</span></p>
         </form>
       </div>
