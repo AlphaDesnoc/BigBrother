@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import {connectWebSocket} from '../../../data/webSocket';
+import {connectWebSocket} from '../../../data/webSocketBot.js';
 import { ref } from 'vue';
 
 const totalUsers = ref(); 
 const totalBots = ref();
 const totalMembersPerRanks = ref();
+const totalUsersInVoice = ref();
 connectWebSocket().then(ws => {
     console.log('WebSocket connection established', ws);
     if(ws instanceof WebSocket){
         ws.send('{"id": "getTotalUsers"}');
         ws.send('{"id": "getTotalBots"}');
         ws.send('{"id": "getMemberPerRanks"}');
+        ws.send('{"id": "getUsersInVoice"}');
 
         ws.onmessage = (event) => {
             let receiveData = JSON.parse(event.data);
@@ -25,6 +27,9 @@ connectWebSocket().then(ws => {
                 case "0x03":
                     totalMembersPerRanks.value = receiveData.data;
                     break;
+                case "0x04":
+                    totalUsersInVoice.value = receiveData.data;
+                    break;
                 default:
                     break;
             }
@@ -34,14 +39,14 @@ connectWebSocket().then(ws => {
     console.log('Failed to connect:', error);
 });
 
-console.log(totalMembersPerRanks);
 </script>
 
 <template>
-    <div v-if="totalUsers && totalBots && totalMembersPerRanks">
+    <div v-if="totalUsers && totalBots && totalMembersPerRanks && totalUsersInVoice">
         <p>Discord Infos</p>
         <DataRectangle :data='totalUsers' :label="'Joueurs'" :icon="'fas fa-solid fa-users'" :color="'#1F2937'" :width="'20%'" :height="'20%'" />
         <DataRectangle :data='totalBots' :label="'Bots'" :icon="'fas fa-solid fa-robot'" :color="'#1F2937'" :width="'20%'" :height="'20%'" />
         <PieChart :data="[totalMembersPerRanks[0].nombre, totalMembersPerRanks[1].nombre]" :colors="['#FF5733', '#581845']" :labels="[totalMembersPerRanks[0].nom, totalMembersPerRanks[1].nom]" :size="300" />
+        <DataRectangle :data='totalUsersInVoice' :label="'Joueurs en vocal'" :icon="'fas fa-solid fa-microphone'" :color="'#1F2937'" :width="'20%'" :height="'20%'" />
     </div>
-</template>
+</template>../../../data/webSocketBot

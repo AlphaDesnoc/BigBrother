@@ -3,17 +3,17 @@ import router from './router'
 import App from './views/App.vue'
 import PieChart from './components/PieChart.vue'
 import DataRectangle from './components/DataRectangle.vue'
+import Table from './components/Table.vue'
+import DashboardButton from './components/DashboardButton.vue'
 import './assets/css/main.css'
+import Particle from './components/ParticlesComponent.vue'
+
 
 createApp(App)
 .component('PieChart', PieChart)
 .component('DataRectangle', DataRectangle)
+.component('Table', Table)
+.component('DashboardButton', DashboardButton)
+.component('Particles', Particle)
 .use(router)
 .mount('#app')
-
-import {connectWebSocket} from './data/webSocket';
-// connectWebSocket().then(ws => {
-//     console.log('WebSocket connection established', ws);
-// }).catch(error => {
-//     console.log('Failed to connect:', error);
-// });

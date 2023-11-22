@@ -22,7 +22,7 @@
 
 <template>
     <section>
-  
+    <Particles />
     <div class="box">
       
       <div class="square" style="--i:0;"></div>

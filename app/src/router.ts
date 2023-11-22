@@ -29,6 +29,14 @@ const router = createRouter({
                     }
                 },
                 {
+                    path: "/dashboard/server/console",
+                    component: () => import("./views/dashboard/server/ConsolePanel.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        requiredRole: 'Administrateur'
+                    }
+                },
+                {
                     path: "/dashboard/server/users",
                     component: () => import("./views/dashboard/server/UserPanel.vue"),
                     meta: {
@@ -68,7 +76,7 @@ const router = createRouter({
             ],
             meta: {
                 requiresAuth: true,
-                requiredRole: 'Administrateur'
+                requiredRole: 'Modérateur'
             }
         },
         {

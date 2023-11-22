@@ -28,32 +28,15 @@ function handleClick(route: string, index: number){
           <h2 class="title">BigBrother</h2>
         </div>
         <p class="category">Server</p>
-        <div class="button" :class="{ active: activeButtonIndex === 0 }" @click="handleClick('server/infos', 0)">
-          <i class="fa-solid fa-gauge"></i>
-          Dashboard
-        </div>
-        <div class="button" :class="{ active: activeButtonIndex === 1 }" @click="handleClick('server/users', 1)">
-          <i class="fa-solid fa-users"></i>
-          Users
-        </div>
+        <DashboardButton :name="'Dashboard'" :icon="'fa-solid fa-gauge'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 0 }" @click="handleClick('server/infos', 0)" />
+        <DashboardButton :name="'Console'" :icon="'fa-solid fa-terminal'" :rank="'Administrateur'" :class="{ active: activeButtonIndex === 1 }" @click="handleClick('server/console', 1)" />
+        <DashboardButton :name="'Users'" :icon="'fa-solid fa-users'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 2 }" @click="handleClick('server/users', 2)" />
         <p class="category">Website</p>
-        <div class="button" :class="{ active: activeButtonIndex === 2 }" @click="handleClick('web/infos', 2)">
-          <i class="fa-solid fa-gauge"></i>
-          Dashboard
-        </div>
-        <div class="button" :class="{ active: activeButtonIndex === 3 }" @click="handleClick('web/users', 3)">
-          <i class="fa-solid fa-users"></i>
-          Users
-        </div>
+        <DashboardButton :name="'Dashboard'" :icon="'fa-solid fa-gauge'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 3 }" @click="handleClick('web/infos', 3)" />
+        <DashboardButton :name="'Users'" :icon="'fa-solid fa-users'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 4 }" @click="handleClick('web/users', 4)" />
         <p class="category">Discord</p>
-        <div class="button" :class="{ active: activeButtonIndex === 4 }" @click="handleClick('discord/infos', 4)">
-          <i class="fa-solid fa-gauge"></i>
-          Dashboard
-        </div>
-        <div class="button" :class="{ active: activeButtonIndex === 5 }" @click="handleClick('discord/users', 5)">
-          <i class="fa-solid fa-users"></i>
-          Users
-        </div>
+        <DashboardButton :name="'Dashboard'" :icon="'fa-solid fa-gauge'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 5 }" @click="handleClick('discord/infos', 5)" />
+        <DashboardButton :name="'Users'" :icon="'fa-solid fa-users'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 6 }" @click="handleClick('discord/users', 6)" />
       </div>
       <div class="barBottom">
         <div class="button logout" @click="logOut">
