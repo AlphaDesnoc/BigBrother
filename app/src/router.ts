@@ -72,6 +72,15 @@ const router = createRouter({
                     meta: {
                         requiresAuth: true
                     }
+                },
+                //Admin
+                {
+                    path: "/dashboard/admin/users",
+                    component: () => import("./views/dashboard/admin/UsersPanel.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        requiredRole: 'Administrateur'
+                    }
                 }
             ],
             meta: {

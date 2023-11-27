@@ -1,4 +1,4 @@
-export function connectWebSocket(shouldReconnect = true): Promise<WebSocket | boolean> {
+export function connectWebSocketBot(shouldReconnect = true): Promise<WebSocket | boolean> {
     return new Promise((resolve, reject) => {
         let ws = new WebSocket('ws://localhost:8080');
 

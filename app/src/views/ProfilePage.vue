@@ -81,6 +81,7 @@ const handleActivate2FA = async () => {
             </div>
         </div>
         <div class="panelProfile" v-if="user && urlProfile">
+            <DashboardParticles />
             <div class="card">
                 <p class="title">Profile</p>
                 <span></span>

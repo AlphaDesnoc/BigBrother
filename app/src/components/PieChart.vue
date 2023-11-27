@@ -107,3 +107,7 @@ function clarify(couleur: string, pourcentage: number): string {
   return color.toString();
 }
 </script>
+
+<style scoped>
+
+</style>

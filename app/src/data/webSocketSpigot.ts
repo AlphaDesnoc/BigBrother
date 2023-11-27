@@ -1,4 +1,4 @@
-export function connectWebSocket(shouldReconnect = true): Promise<WebSocket | boolean> {
+export function connectWebSocketSpigot(shouldReconnect = true): Promise<WebSocket | boolean> {
     return new Promise((resolve, reject) => {
         let ws = new WebSocket('ws://45.147.98.228:8080');
         
@@ -14,7 +14,7 @@ export function connectWebSocket(shouldReconnect = true): Promise<WebSocket | bo
             if (shouldReconnect) {
                 console.log('Attempting to reconnect...');
                 setTimeout(() => {
-                    connectWebSocket().then(resolve).catch(reject);
+                    connectWebSocketSpigot().then(resolve).catch(reject);
                 }, 3000);
             }
         };

@@ -270,6 +270,8 @@ section {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #374151;
+    z-index: 1;
+    position: relative;
 }
 
 .barMenu {
@@ -295,6 +297,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 20px 0;
 }
 
 .titleContainer:hover {
@@ -357,6 +360,8 @@ section {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    z-index: 1;
+    position: relative;
 }
 
 .searchBox {
@@ -428,6 +433,8 @@ section {
     border-bottom: 1px solid #374151;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .backToDash {
@@ -477,6 +484,8 @@ section {
     align-items: center;
     color: aliceblue;
     background-color: #1F2937;
+    position: relative;
+    z-index: 1;
 }
 
 .card .title {

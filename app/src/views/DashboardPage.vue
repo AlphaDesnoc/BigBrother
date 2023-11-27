@@ -37,6 +37,8 @@ function handleClick(route: string, index: number){
         <p class="category">Discord</p>
         <DashboardButton :name="'Dashboard'" :icon="'fa-solid fa-gauge'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 5 }" @click="handleClick('discord/infos', 5)" />
         <DashboardButton :name="'Users'" :icon="'fa-solid fa-users'" :rank="'Modérateur'" :class="{ active: activeButtonIndex === 6 }" @click="handleClick('discord/users', 6)" />
+        <p class="category">Admin</p>
+        <DashboardButton :name="'Users'" :icon="'fa-solid fa-users'" :rank="'Administrateur'" :class="{ active: activeButtonIndex === 7 }" @click="handleClick('admin/users', 7)" />
       </div>
       <div class="barBottom">
         <div class="button logout" @click="logOut">

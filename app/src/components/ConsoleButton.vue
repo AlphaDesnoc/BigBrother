@@ -3,11 +3,11 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     props: {
-        data: {
+        name: {
             type: String,
             required: true
         },
-        label: {
+        icon: {
             type: String,
             required: true
         },
@@ -22,41 +22,33 @@ export default defineComponent({
         height: {
             type: String,
             required: true
-        },
-        icon: {
-            type: String,
-            required: true
         }
     },
-    setup(_props) {},
+    setup(_props) {
+    }
 })
 </script>
 
 <template>
-    <div class="card">
+    <div class="button">
         <i :class="icon"></i>
-        <div>
-            <h1><span>{{ data }}</span></h1>
-            <h3>{{ label }}</h3>
-        </div>
+        {{name}}
     </div>
 </template>
 
 <style scoped>
-
-.card {
-    background-color: v-bind(color);
+.button {
     width: v-bind(width);
     height: v-bind(height);
-    padding: 15px;
-    border: 1.5px solid #374151;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: center;
+    padding: 10px;
+    background-color: v-bind(color);
+    color: white;
+    border-radius: 3px;
+    margin: 5px 0px;
+    cursor: pointer;
 }
-.fas{
-    font-size: 40px;
+
+.button i {
+    margin-right: 10px;
 }
 </style>

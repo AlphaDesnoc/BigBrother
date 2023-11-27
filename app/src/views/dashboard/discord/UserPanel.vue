@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { connectWebSocket } from '../../../data/webSocketBot';
+import { connectWebSocketBot } from '../../../data/webSocketBot';
 import { ref } from 'vue';
 
 const allUsers = ref();
 const wss = ref();
-connectWebSocket().then(ws => {
+connectWebSocketBot().then(ws => {
     wss.value = ws;
     console.log('WebSocket connection established', ws);
     if (ws instanceof WebSocket) {
@@ -36,7 +36,7 @@ function excludeUser(userId: string) {
     location.reload();
 }
 
-function kickUser(userId: string){
+function kickUser(userId: string) {
     let reason = prompt("Raison du kick");
     wss.value.send(JSON.stringify({
         id: "kickUser",
@@ -46,7 +46,7 @@ function kickUser(userId: string){
     location.reload();
 }
 
-function banUser(userId: string){
+function banUser(userId: string) {
     let reason = prompt("Raison du ban");
     wss.value.send(JSON.stringify({
         id: "banUser",
@@ -76,17 +76,21 @@ const buttons = [
 </script>
 
 <template>
+    <DashboardParticles />
     <div class="panel">
-        <Table :label="['ID', 'Nickname', 'Username', 'Join Date', 'Is Excluded', 'Excluded Time', 'Actions']" :data="allUsers" :buttons="buttons"/>
+        <Table :label="['ID', 'Nickname', 'Username', 'Join Date', 'Is Excluded', 'Excluded Time', 'Actions']"
+            :data="allUsers" :buttons="buttons" />
     </div>
 </template>
 
 <style scoped>
-    .panel{
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-    }
-</style>../../../data/webSocketBot
+.panel {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+</style>

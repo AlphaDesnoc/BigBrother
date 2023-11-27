@@ -20,7 +20,6 @@ const firebaseApp = initializeApp({
 export const auth: Auth = getAuth(firebaseApp);
 const db: Firestore = getFirestore(firebaseApp); //Image
 const storage: FirebaseStorage = getStorage(firebaseApp); //Users
-
 /**
  * The `useAuthState` function is a custom hook in TypeScript that manages the authentication state,
  * including the user, error, and whether the user is authenticated or not.
@@ -124,7 +123,7 @@ export async function authentication(email: string, password: string) {
                                     resolver.resolveSignIn(multiFactorAssertion)
                                         .then(function (userCredential) {
                                             // if (user.emailVerified) {
-                                                router.push('/dashboard');
+                                            router.push('/dashboard');
                                             // }
                                         })
                                 }

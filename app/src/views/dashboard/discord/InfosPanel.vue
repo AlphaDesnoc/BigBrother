@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {connectWebSocket} from '../../../data/webSocketBot.js';
+import {connectWebSocketBot} from '../../../data/webSocketBot.js';
 import { ref } from 'vue';
 
 const totalUsers = ref(); 
 const totalBots = ref();
 const totalMembersPerRanks = ref();
 const totalUsersInVoice = ref();
-connectWebSocket().then(ws => {
+connectWebSocketBot().then(ws => {
     console.log('WebSocket connection established', ws);
     if(ws instanceof WebSocket){
         ws.send('{"id": "getTotalUsers"}');
@@ -42,11 +42,19 @@ connectWebSocket().then(ws => {
 </script>
 
 <template>
-    <div v-if="totalUsers && totalBots && totalMembersPerRanks && totalUsersInVoice">
+    <DashboardParticles />
+    <div v-if="totalUsers && totalBots && totalMembersPerRanks && totalUsersInVoice" class="dashInfos">
         <p>Discord Infos</p>
         <DataRectangle :data='totalUsers' :label="'Joueurs'" :icon="'fas fa-solid fa-users'" :color="'#1F2937'" :width="'20%'" :height="'20%'" />
         <DataRectangle :data='totalBots' :label="'Bots'" :icon="'fas fa-solid fa-robot'" :color="'#1F2937'" :width="'20%'" :height="'20%'" />
         <PieChart :data="[totalMembersPerRanks[0].nombre, totalMembersPerRanks[1].nombre]" :colors="['#FF5733', '#581845']" :labels="[totalMembersPerRanks[0].nom, totalMembersPerRanks[1].nom]" :size="300" />
         <DataRectangle :data='totalUsersInVoice' :label="'Joueurs en vocal'" :icon="'fas fa-solid fa-microphone'" :color="'#1F2937'" :width="'20%'" :height="'20%'" />
     </div>
-</template>../../../data/webSocketBot
+</template>
+
+<style scoped>
+.dashInfos{
+    position: relative;
+    z-index: 1;
+}
+</style>
