@@ -8,8 +8,7 @@ import DashboardButton from './components/DashboardButton.vue'
 import Particle from './components/ParticlesComponent.vue'
 import DashboardParticle from './components/ParticlesDashboard.vue'
 import ConsoleButton from './components/ConsoleButton.vue'
-import './assets/css/main.css'
-
+import './assets/css/main.scss'
 
 createApp(App)
 .component('PieChart', PieChart)
