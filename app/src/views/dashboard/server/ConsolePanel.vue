@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { connectWebSocketBot } from '../../../data/webSocketBot';
@@ -14,13 +14,13 @@ const wssBot = ref();
 const wssSpigot = ref();
 const serverRam = ref();
 const serverCPU = ref();
+const windowWidth = ref(window.innerWidth);
+
 onMounted(() => {
-    const terminal = new Terminal({
-        rows: 31,
-        cols: 158
-    });
+    const terminal = new Terminal();
     const fitAddon = new FitAddon();
     terminal.loadAddon(fitAddon);
+    fitAddon.fit();
     let currentLine: string = '';
 
     // Attachez le terminal à l'élément du DOM
@@ -106,18 +106,34 @@ onMounted(() => {
             terminal.write(key.key);
         }
     })
+
+    window.addEventListener('resize', updateWindowWidth);
+
 });
 
+onUnmounted(async () => {
+  window.removeEventListener('resize', updateWindowWidth);
+});
 
-function startServer(){
+const updateWindowWidth = (): void => {
+  windowWidth.value = window.innerWidth;
+};
+
+
+const getNameByTabletSize = (name: string): string => {
+  return windowWidth.value >= 1024 ? name : '';
+};
+
+
+function startServer() {
     wssBot.value.send('{"id": "startServer"}');
 }
 
-function stopServer(){
+function stopServer() {
     wssBot.value.send('{"id": "stopServer"}');
 }
 
-function restartServer(){
+function restartServer() {
     wssBot.value.send('{"id": "restartServer"}');
 }
 
@@ -130,16 +146,19 @@ function restartServer(){
         <div class="serverInfos">
             <DataRectangle :icon="'fas fa-solid fa-memory'" :data="serverRam" :label="'Ram'" :width="'20%'" :height="'80%'"
                 :color="'#1F2937'" />
-            <DataRectangle :icon="'fas fa-solid fa-microchip'" :data="serverCPU + '%'" :label="'CPU'" :width="'20%'" :height="'80%'"
-                :color="'#1F2937'" />
+            <DataRectangle :icon="'fas fa-solid fa-microchip'" :data="serverCPU + '%'" :label="'CPU'" :width="'20%'"
+                :height="'80%'" :color="'#1F2937'" />
         </div>
         <div class="console">
             <div ref="terminalRef" class="terminal"></div>
         </div>
         <div class="serverButtons">
-            <ConsoleButton :width="'24%'" :color="'#476930'" :height="'30%'" :icon="'fas fa-solid fa-play'" :name="'Démarrer le serveur'" @click="_$event => startServer()"/>
-            <ConsoleButton :width="'24%'" :color="'#c1121f'" :height="'30%'" :icon="'fas fa-solid fa-stop'" :name="'Arrêter le serveur'" @click="_$event => stopServer()"/>
-            <ConsoleButton :width="'24%'" :color="'#023e8a'" :height="'30%'" :icon="'fas fa-solid fa-arrows-rotate'" :name="'Redémarrer le serveur'" @click="_$event => restartServer()"/>
+            <ConsoleButton :width="'24%'" :color="'#476930'" :height="'30%'" :icon="'fas fa-solid fa-play'"
+                :name="getNameByTabletSize('Démarrer le serveur')" @click="_$event => startServer()" />
+            <ConsoleButton :width="'24%'" :color="'#c1121f'" :height="'30%'" :icon="'fas fa-solid fa-stop'"
+                :name="getNameByTabletSize('Arrêter le serveur')" @click="_$event => stopServer()" />
+            <ConsoleButton :width="'24%'" :color="'#023e8a'" :height="'30%'" :icon="'fas fa-solid fa-arrows-rotate'"
+                :name="getNameByTabletSize('Redémarrer le serveur')" @click="_$event => restartServer()" />
         </div>
     </div>
 </template>
@@ -182,11 +201,10 @@ function restartServer(){
     width: 100% !important;
 }
 
-.serverButtons{
+.serverButtons {
     display: flex;
-    width: 50%;
+    width: 70%;
     justify-content: space-between;
     position: relative;
     z-index: 1;
-}
-</style>
+}</style>

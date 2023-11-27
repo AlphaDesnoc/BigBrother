@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted} from 'vue';
 import { getCurrentUser, getProfileImage, updateUserData, updateProfileImage, activate2FA, getUserRoles } from '../data/firebase';
 
 import router from '../router';
@@ -10,18 +10,26 @@ const user = ref();
 const urlProfile = ref();
 const userRoles = ref<string[]>([]);
 const creationDate = ref();
+const windowWidth = ref(window.innerWidth);
 
 onMounted(async () => {
     user.value = await getCurrentUser();
     urlProfile.value = await getProfileImage();
-    if(auth.currentUser !== null){
+    if (auth.currentUser !== null) {
         userRoles.value = await getUserRoles(auth.currentUser.uid);
     }
-    if(auth.currentUser !== null){
-    if(auth.currentUser.metadata.creationTime !== undefined){
-        creationDate.value = new Date(auth.currentUser.metadata.creationTime).toLocaleDateString('FR')
+    if (auth.currentUser !== null) {
+        if (auth.currentUser.metadata.creationTime !== undefined) {
+            creationDate.value = new Date(auth.currentUser.metadata.creationTime).toLocaleDateString('FR')
+        }
     }
-}
+
+    window.addEventListener('resize', updateWindowWidth);
+
+});
+
+onUnmounted(async () => {
+  window.removeEventListener('resize', updateWindowWidth);
 });
 
 let fileImage: File | null;
@@ -70,13 +78,22 @@ const handleClickProfile = async () => {
 const handleActivate2FA = async () => {
     activate2FA();
 }
+
+const updateWindowWidth = (): void => {
+  windowWidth.value = window.innerWidth;
+};
+
+const getNameByTabletSize = (name: string): string => {
+    return windowWidth.value >= 1024 ? name : '';
+};
+
 </script>
 
 <template>
     <div class="backProfile">
         <div class="topBar">
             <div class="backToDash" @click="router.push('dashboard')">
-                <input type="submit" value="Dashboard">
+                <input type="submit" :value="getNameByTabletSize('Dashboard')">
                 <i class="fas fa-solid fa-arrow-left"></i>
             </div>
         </div>
@@ -87,11 +104,11 @@ const handleActivate2FA = async () => {
                 <span></span>
                 <img :src="urlProfile" class="profilImage" />
                 <p class="pseudo">{{ user.username }}</p>
-                <p class="rank">{{userRoles[0]}}</p>
+                <p class="rank">{{ userRoles[0] }}</p>
                 <div class="infos">
                     <p class="infosName">Informations</p>
                     <div>
-                        <p>Registered: {{creationDate}} </p>
+                        <p>Registered: {{ creationDate }} </p>
                         <p>Role:</p>
                         <ul style="display: flex; justify-content: space-evenly;">
                             <li v-for="role in userRoles" :key="role">{{ role }}</li>
